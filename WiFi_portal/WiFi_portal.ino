@@ -68,38 +68,6 @@ void WiFiEvent(WiFiEvent_t event)
   }
 }
 
-void setup()
-{
-  Serial.begin(115200);
-  WiFi.onEvent(WiFiEvent);
-  WiFi.mode(WIFI_MODE_APSTA);
-  WiFi.softAP(AP_SSID);
-  Serial.println("AP Started");
-  Serial.print("AP SSID: ");
-  Serial.println(AP_SSID);
-  Serial.print("AP IPv4: ");
-  Serial.println(WiFi.softAPIP());
-
-  preferences.begin("wifi", false);
-  String wifiSSID =  preferences.getString("ssid", "none");         //NVS key ssid
-  String wifiPassword =  preferences.getString("password", "none");   //NVS key password
-  preferences.end();
-  Serial.print("Stored SSID: ");
-  Serial.println(wifiSSID);
-
-  WiFi.begin(wifiSSID.c_str(), wifiPassword.c_str());
-
-  server.begin();
-}
-
-void loop()
-{
-  if (wifi_connected) {
-    wifiConnectedLoop();
-  } else {
-    wifiDisconnectedLoop();
-  }
-}
 
 //when wifi connects
 void wifiOnConnect()
@@ -209,5 +177,39 @@ void wifiDisconnectedLoop()
     // close the connection:
     client.stop();
     Serial.println("client disconnected");
+  }
+}
+
+
+void setup()
+{
+  Serial.begin(115200);
+  WiFi.onEvent(WiFiEvent);
+  WiFi.mode(WIFI_MODE_APSTA);
+  WiFi.softAP(AP_SSID);
+  Serial.println("AP Started");
+  Serial.print("AP SSID: ");
+  Serial.println(AP_SSID);
+  Serial.print("AP IPv4: ");
+  Serial.println(WiFi.softAPIP());
+
+  preferences.begin("wifi", false);
+  String wifiSSID =  preferences.getString("ssid", "none");         //NVS key ssid
+  String wifiPassword =  preferences.getString("password", "none");   //NVS key password
+  preferences.end();
+  Serial.print("Stored SSID: ");
+  Serial.println(wifiSSID);
+
+  WiFi.begin(wifiSSID.c_str(), wifiPassword.c_str());
+
+  server.begin();
+}
+
+void loop()
+{
+  if (wifi_connected) {
+    wifiConnectedLoop();
+  } else {
+    wifiDisconnectedLoop();
   }
 }
